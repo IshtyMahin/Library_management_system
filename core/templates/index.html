@@ -1,0 +1,85 @@
+{% extends 'base.html' %} {% load static %} {% block head_title %}Library
+Management System{% endblock %} {% block content %}
+<div class="px-4 mx-auto flex flex-col md:flex-row items-center">
+  <div
+    class="flex flex-col w-full lg:w-1/2 justify-center items-start py-6 px-6 bg-white rounded-2xl bg-opacity-70 mx-2"
+  >
+    <h1 class="font-bold text-4xl py-6">Welcome to Mamar Library</h1>
+    <p class="leading-normal">
+      Welcome to Mamar Library. This is a place where you can explore a wide
+      range of books, immerse yourself in knowledge, and discover new worlds
+      through literature. Whether you're looking to borrow books, conduct
+      research, or simply indulge in the joy of reading, our library is here to
+      serve you
+    </p>
+    <div class="flex justify-end w-full pt-3">
+      <a
+        href="{% url 'register' %}"
+        class="bg-blue-900 text-white rounded hover:bg-white hover:text-blue-900 hover:border-blue-900 shadow hover:shadow-lg py-2 px-4 border border-gray-900 hover:border-transparent"
+        >Register</a
+      >
+    </div>
+  </div>
+  <div class="w-full lg:w-1/2 lg:py-6 text-center">
+    <img class="rounded-2xl" src="{% static '/img/Library.png' %}" />
+  </div>
+</div>
+
+<div class="min-h-screen mb-12">
+  <div class="p-3 bg-white">
+    <h5 class="text-center">All Book Categories</h5>
+    <div class="mt-2 flex justify-center flex-wrap gap-3">
+      <div class="mb-2">
+        <a
+          href="{% url 'all_book' %}"
+          class="bg-gray-800 text-white px-3 py-2 rounded hover:bg-gray-700"
+          >All</a
+        >
+      </div>
+      {% for cat in categories %}
+      <div class="mb-2">
+        <a
+          href="{% url 'cat_wise_book' cat.slug %}"
+          class="bg-gray-800 text-white px-3 py-2 rounded hover:bg-gray-700"
+          >{{ cat.name }}</a
+        >
+      </div>
+      {% endfor %}
+    </div>
+    <h3 class="text-center py-2">Total Books found: {{ data|length }}</h3>
+  </div>
+  <div class="p-1">
+    <!-- Main Content -->
+    <div class="flex flex-wrap justify-around mt-4">
+      {% for book in data %}
+      <div
+        class="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden m-1 flex flex-col"
+        style="width: 18rem"
+      >
+        <img
+          class="w-full h-56 object-cover object-center"
+          src="{{ book.image.url }}"
+          alt="Book Image"
+        />
+        <div class="px-6 py-4 flex-grow">
+          <div class="font-bold text-xl mb-2">{{ book.title }}</div>
+          <p class="text-gray-700 text-base">
+            <b>Description: </b>{{ book.description|truncatewords:10 }}
+          </p>
+          <p><b>Price: </b>{{ book.borrowing_price }}</p>
+        </div>
+        <div class="px-6 pt-4 pb-2">
+          <a
+            href="{% url 'detail_book' book.id %}"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >Book Details</a
+          >
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

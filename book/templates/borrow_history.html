@@ -1,0 +1,94 @@
+<!-- borrow_history.html -->
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block head_title %} Borrowed History Report{% endblock %} {% block content %}
+
+<div class="my-12 py-3 mx-12 px-4 bg-white rounded-xl shadow-md">
+
+  <div class="flex justify-between mb-4">
+    <div class="flex">
+      <button
+        id="btn-borrowed"
+        class="mr-4 py-2 px-4 bg-blue-500 text-white rounded"
+      >
+        Borrowed Books
+      </button>
+      <button
+        id="btn-returned"
+        class="py-2 px-4 bg-gray-500 text-white rounded"
+      >
+        Returned Books
+      </button>
+    </div>
+  </div>
+
+  <div id="borrowed-books">
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold mb-3">Borrowed Books: {{borrowed_books|length}}</h2>
+        <table class="table-auto mx-auto w-full px-5 rounded-xl mt-8 border dark:border-neutral-500">
+            <thead class="bg-purple-900 text-white text-left">
+                <tr class="bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-md py-2 px-4 text-white font-bold">
+                    <th class="px-4 py-2">Book Name</th>
+                    <th class="px-4 py-2">Borrow Date</th>
+                    <th class="px-4 py-2">Return Date</th>
+                    <th class="px-4 py-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bk in borrowed_books %}
+                <tr class="border-b dark:border-neutral-500">
+                    <td class="px-4 py-2 text-2xl">{{ bk.book.title|truncatewords:4 }}</td>
+                    <td class="px-4 py-2">{{ bk.borrow_date|date:"F d, Y h:i A"}}</td>
+                    <td class="px-4 py-2">{{ bk.return_date|date:"F d, Y h:i A"}}</td>
+                    <td class="px-4 py-2"><a href="{% url 'return_book' bk.book.id %}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Return</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+  </div>
+
+  <div id="returned-books" class="hidden">
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold mb-3">Return Books: {{ returned_books | length }}</h2>
+        <table class="table-auto mx-auto w-full px-5 rounded-xl mt-8 border dark:border-neutral-500">
+            <thead class="bg-purple-900 text-white text-left">
+                <tr class="bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-md py-2 px-4 text-white font-bold">
+                    <th class="px-4 py-2">Book Name</th>
+                    <th class="px-4 py-2">Borrow Date</th>
+                    <th class="px-4 py-2">Return Date</th>
+                    <th class="px-4 py-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bk in returned_books %}
+                <tr class="border-b dark:border-neutral-500">
+                    <td class="px-4 py-2 text-2xl">{{ bk.book.title|truncatewords:4 }}</td>
+                    <td class="px-4 py-2">{{ bk.borrow_date|date:"F d, Y h:i A"}}</td>
+                    <td class="px-4 py-2">{{ bk.return_date|date:"F d, Y h:i A"}}</td>
+                    <td class="px-4 py-2"><a href="{% url 'detail_book' bk.book.id %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Book_details</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+  document
+    .getElementById("btn-borrowed")
+    .addEventListener("click", function () {
+      document.getElementById("borrowed-books").classList.remove("hidden");
+      document.getElementById("returned-books").classList.add("hidden");
+    });
+
+  document
+    .getElementById("btn-returned")
+    .addEventListener("click", function () {
+      document.getElementById("borrowed-books").classList.add("hidden");
+      document.getElementById("returned-books").classList.remove("hidden");
+    });
+</script>
+{% endblock content%}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mx-auto py-3">
+  <div class="bg-white p-3 rounded-lg shadow-md mx-auto w-3/4">
+    <div class="flex flex-wrap">
+      <div class="w-full md:w-1/2">
+        <img class="w-full h-auto" src="{{ book.image.url }}" alt="Book Image" />
+      </div>
+      <div class="w-full md:w-1/2">
+        <div class="p-3">
+          <h3 class="text-xl font-semibold">{{ book.title }}</h3>
+          <p><b>Price:</b> {{ book.borrowing_price }}</p>
+          <p><b>Quantity:</b> {{ book.quantity }}</p>
+          <p><b>Description:</b> {{ book.description }}</p>
+          <p><b>Category:</b> {{ book.categories.name }}</p>
+     
+          {% if not has_borrowed %}
+          <div class="mt-3 flex justify-center">
+            <a href="{% url 'borrow_book' book.id %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Borrow</a>
+          </div>
+          {% endif %}
+          {% if has_borrowed %}
+          <div class="mt-3 flex justify-center">
+            <a href="{% url 'return_book' book.id %}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Return</a>
+          </div>
+          {% endif %}
+   
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bg-white m-2 rounded-lg shadow-md text-center text-green-500 text-2xl">
+  {% if count %}
+    <h5 class="p-3">You borrowed this book {{ count }} times</h5>
+  {% else %}
+    <h5 class="p-3">You did not borrow the book</h5>
+  {% endif %}
+</div>
+
+<div class="bg-white m-2 rounded-lg shadow-md mb-5">
+  <h5 class="p-3">Total Reviews: {{ reviews|length }}</h5>
+  {% for review in reviews %}
+  <div class="border m-2 p-3">
+    <p><b>{{ review.user.username }}</b> {{ review.created_on }}</p>
+    <p>{{ review.body }}</p>
+  </div>
+  {% endfor %}
+</div>
+
+{% if count %}
+<div class="bg-white m-2 rounded-lg shadow-md">
+  <div class="p-3">
+    <form method="post">
+      <h1 class="text-xl font-semibold">Add Review</h1>
+      {% csrf_token %}
+      <textarea name="body" class="w-full border p-2 rounded focus:outline-none focus:border-blue-500" placeholder="Type your review here..." rows="4"></textarea>
+      <button type="submit" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-3">Submit</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+{% endblock content %}
