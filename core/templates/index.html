@@ -68,6 +68,7 @@ Management System{% endblock %} {% block content %}
           </p>
           <p><b>Price: </b>{{ book.borrowing_price }}</p>
         </div>
+        {% if request.user.is_authenticated %}
         <div class="px-6 pt-4 pb-2">
           <a
             href="{% url 'detail_book' book.id %}"
@@ -75,6 +76,7 @@ Management System{% endblock %} {% block content %}
             >Book Details</a
           >
         </div>
+        {% endif %}
       </div>
 
       {% endfor %}
